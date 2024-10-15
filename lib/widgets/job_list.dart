@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jobs/models/job_model.dart';
 import 'package:flutter_jobs/pages/detail_pages.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JobList extends StatelessWidget {
-  final String text;
-  final String perusahan;
-  final String imageUrl;
-  const JobList(
-      {required this.text, required this.imageUrl, required this.perusahan});
+  final JobModel job;
+  const JobList(this.job);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +13,7 @@ class JobList extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DetailPages()),
+          MaterialPageRoute(builder: (context) => DetailPages(job)),
         );
       },
       child: Row(
@@ -45,27 +43,30 @@ class JobList extends StatelessWidget {
           //     ),
           //   ],
           // )
-          Image.asset(
-            imageUrl,
+          Image.network(
+            job.companyLogo,
             height: 40,
             width: 40,
           ),
-          SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                text,
-                style: GoogleFonts.poppins(
-                    fontSize: 17, fontWeight: FontWeight.w600),
-              ),
-              Text(
-                perusahan,
-                style: GoogleFonts.poppins(
-                    fontSize: 15, color: Colors.blueGrey.shade600),
-              ),
-            ],
-          )
+          SizedBox(width: 24),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  job.name,
+                  style: GoogleFonts.poppins(
+                      fontSize: 17, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  job.companyName,
+                  style: GoogleFonts.poppins(
+                      fontSize: 15, color: Colors.blueGrey.shade600),
+                ),
+                SizedBox(height: 24),
+              ],
+            ),
+          ),
         ],
       ),
     );

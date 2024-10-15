@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jobs/models/category_model.dart';
 import 'package:flutter_jobs/pages/detail_job.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JobCard extends StatelessWidget {
-  final String text;
-  final String imageUrl;
-  const JobCard({
-    required this.imageUrl,
-    required this.text,
-    Key? key,
-  }) : super(key: key);
+  final CategoryModel category;
+  JobCard(this.category);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => DetailJob(
-                    imageUrl: imageUrl,
-                    titleJob: text,
+                    category,
                   )),
         );
       },
       child: Container(
         height: 200,
         width: 150,
+        margin: const EdgeInsets.only(right: 15),
         child: Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Text(
-              text,
+              category.name,
               style: GoogleFonts.poppins(
                   fontSize: 18,
                   color: Colors.white,
@@ -42,7 +38,7 @@ class JobCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(imageUrl),
+            image: NetworkImage(category.imageUrl),
           ),
         ),
       ),

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jobs/models/category_model.dart';
+import 'package:flutter_jobs/models/job_model.dart';
+import 'package:flutter_jobs/providers/job_provider.dart';
 import 'package:flutter_jobs/widgets/job_list.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class DetailJob extends StatelessWidget {
-  final String titleJob;
-  final String imageUrl;
+  final CategoryModel category;
 
-  const DetailJob({
-    required this.imageUrl,
-    required this.titleJob,
-    Key? key,
-  }) : super(key: key);
+  const DetailJob(
+    this.category,
+  );
 
   @override
   Widget build(BuildContext context) {
+    var jobProvider = Provider.of<JobProvider>(context);
+
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -30,8 +33,8 @@ class DetailJob extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         height: 300,
-                        child: Image.asset(
-                          imageUrl,
+                        child: Image.network(
+                          category.imageUrl,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -53,7 +56,7 @@ class DetailJob extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            titleJob,
+                            category.name,
                             style: GoogleFonts.poppins(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -92,23 +95,37 @@ class DetailJob extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Column(
-                        children: [
-                          JobList(
-                            text: "Front End Developer",
-                            imageUrl: 'assets/instagram-icon.png',
-                            perusahan: "INTAGRAM",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          JobList(
-                            text: "Back end Developer",
-                            imageUrl: 'assets/facebook-icon.png',
-                            perusahan: "FACEBOOK",
-                          ),
-                        ],
-                      ),
+                      FutureBuilder<List<JobModel>>(
+                          future:
+                              jobProvider.getJobsByCategories(category.name),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return Column(
+                                children: snapshot.hasData
+                                    ? snapshot.data!
+                                        .map(
+                                          (jobs) => JobList(jobs),
+                                        )
+                                        .toList()
+                                    : [
+                                        Text('No data available'),
+                                      ],
+                                // [
+                                //   JobList(
+                                //     text: "Front End Developer",
+                                //     imageUrl: 'assets/instagram-icon.png',
+                                //     perusahan: "INTAGRAM",
+                                //   ),
+                                // ],
+                              );
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.red,
+                              ),
+                            );
+                          }),
                       SizedBox(
                         height: 30,
                       ),
@@ -123,65 +140,38 @@ class DetailJob extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      Column(
-                        children: [
-                          JobList(
-                            text: "Front End Developer",
-                            imageUrl: 'assets/instagram-icon.png',
-                            perusahan: "INTAGRAM",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          JobList(
-                            text: "Back end Developer",
-                            imageUrl: 'assets/facebook-icon.png',
-                            perusahan: "FACEBOOK",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          JobList(
-                            text: "Front End Developer",
-                            imageUrl: 'assets/instagram-icon.png',
-                            perusahan: "INTAGRAM",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          JobList(
-                            text: "Back end Developer",
-                            imageUrl: 'assets/facebook-icon.png',
-                            perusahan: "FACEBOOK",
-                          ),
-                          JobList(
-                            text: "Front End Developer",
-                            imageUrl: 'assets/instagram-icon.png',
-                            perusahan: "INTAGRAM",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          JobList(
-                            text: "Back end Developer",
-                            imageUrl: 'assets/facebook-icon.png',
-                            perusahan: "FACEBOOK",
-                          ),
-                          JobList(
-                            text: "Front End Developer",
-                            imageUrl: 'assets/instagram-icon.png',
-                            perusahan: "INTAGRAM",
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          JobList(
-                            text: "Back end Developer",
-                            imageUrl: 'assets/facebook-icon.png',
-                            perusahan: "FACEBOOK",
-                          ),
-                        ],
-                      ),
+                      FutureBuilder<List<JobModel>>(
+                          future: jobProvider.getJobs(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return Column(
+                                children: snapshot.hasData
+                                    ? snapshot.data!
+                                        .map(
+                                          (jobs) => JobList(
+                                            jobs,
+                                          ),
+                                        )
+                                        .toList()
+                                    : [
+                                        Text('No data available'),
+                                      ],
+                                // [
+                                //   JobList(
+                                //     text: "Front End Developer",
+                                //     imageUrl: 'assets/instagram-icon.png',
+                                //     perusahan: "INTAGRAM",
+                                //   ),
+                                // ],
+                              );
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.red,
+                              ),
+                            );
+                          }),
                     ],
                   ),
                 )

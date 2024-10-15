@@ -206,10 +206,17 @@ class _SiginPageState extends State<SiginPage> {
                                   textEmailError = "Email / Password Salah";
                                 } else {
                                   userProvider.user = response['user'];
-                                  Navigator.push(
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => const HomePage()),
+                                  // );
+                                  Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const HomePage()),
+                                    (Route<dynamic> route) =>
+                                        false, // Mencegah kembali ke halaman sebelumnya
                                   );
                                 }
                               }

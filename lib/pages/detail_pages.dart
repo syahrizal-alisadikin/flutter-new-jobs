@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jobs/models/job_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DetailPages extends StatefulWidget {
-  const DetailPages({super.key});
+  final JobModel job;
+  const DetailPages(this.job);
 
   @override
   State<DetailPages> createState() => _DetailPagesState();
@@ -99,6 +101,23 @@ class _DetailPagesState extends State<DetailPages> {
       ));
     }
 
+    Widget detailItem(detail) {
+      return Row(
+        children: [
+          // Icon(Icons.room_rounded),
+          Image.asset(
+            'assets/dot.png',
+            height: 12,
+            width: 12,
+          ),
+          SizedBox(
+            width: 8,
+          ),
+          Text(detail),
+        ],
+      );
+    }
+
     return Scaffold(
         body: SingleChildScrollView(
       child: Center(
@@ -107,21 +126,21 @@ class _DetailPagesState extends State<DetailPages> {
             isApplied ? successApply() : notApply(),
             Padding(
               padding: const EdgeInsets.only(top: 80.0),
-              child: Image.asset('assets/instagram-icon.png',
+              child: Image.network(widget.job.companyLogo,
                   width: 100, height: 100),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              'Front End Developer',
+              widget.job.name,
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              "Instagram, Inc • Jakarta",
+              "${widget.job.companyName} • ${widget.job.location}",
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.grey,
@@ -146,39 +165,9 @@ class _DetailPagesState extends State<DetailPages> {
                     height: 20,
                   ),
                   Column(
-                    children: [
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Fulltime Onsite")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Start at Rp 8000.000")
-                        ],
-                      )
-                    ],
+                    children: widget.job.about
+                        .map((text) => detailItem(text))
+                        .toList(),
                   ),
                   SizedBox(
                     height: 20,
@@ -193,63 +182,14 @@ class _DetailPagesState extends State<DetailPages> {
                   SizedBox(
                     height: 20,
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                              "Able to use Microsoft Office and  \nGoogle based service.")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                              "Candidate must possess at least a Bachelor's Degree.")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                              "Able to use Microsoft Office and  \nGoogle based service.")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.job.qualifications
+                          .map((text) => detailItem(text))
+                          .toList(),
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -264,63 +204,14 @@ class _DetailPagesState extends State<DetailPages> {
                   SizedBox(
                     height: 20,
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                              "Able to use Microsoft Office and  \nGoogle based service.")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                              "Candidate must possess at least a Bachelor's Degree.")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: [
-                          // Icon(Icons.room_rounded),
-                          Image.asset(
-                            'assets/dot.png',
-                            height: 12,
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                              "Able to use Microsoft Office and  \nGoogle based service.")
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.job.responsibilities
+                          .map((text) => detailItem(text))
+                          .toList(),
+                    ),
                   ),
                   SizedBox(
                     height: 45,

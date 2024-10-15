@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jobs/models/category_model.dart';
+import 'package:flutter_jobs/models/job_model.dart';
 import 'package:flutter_jobs/providers/category_provider.dart';
+import 'package:flutter_jobs/providers/job_provider.dart';
 import 'package:flutter_jobs/providers/user_provider.dart';
 import 'package:flutter_jobs/widgets/job_card.dart';
 import 'package:flutter_jobs/widgets/job_list.dart';
@@ -18,7 +20,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
-    ;
+    var categoryProvider = Provider.of<CategoryProvider>(context);
+    var jobProvider = Provider.of<JobProvider>(context);
 
     Widget header() {
       return Padding(
@@ -35,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome,',
+                    'Malam,',
                     style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                   Text(
@@ -68,30 +71,36 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 18, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    JobCard(
-                      text: 'Flutter Developer',
-                      imageUrl: 'assets/card_category.png',
+              FutureBuilder<List<CategoryModel>>(
+                future: categoryProvider.getCategories(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: snapshot.hasData
+                            ? snapshot.data!
+                                .map(
+                                  (category) => JobCard(category),
+                                )
+                                .toList()
+                            : [Text('No data available')],
+                        // [
+                        //   JobCard(
+                        //     text: 'Flutter Developer',
+                        //     imageUrl: 'assets/card_category.png',
+                        //   ),
+
+                        // ],
+                      ),
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.red,
                     ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    JobCard(
-                      text: 'Web Developer',
-                      imageUrl: 'assets/card_category.png',
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    JobCard(
-                      text: 'Back End Developer',
-                      imageUrl: 'assets/card_category.png',
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
               SizedBox(height: 24),
               Text(
@@ -100,18 +109,36 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 18, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 16),
-              JobList(
-                text: "Front End Developer",
-                imageUrl: 'assets/instagram-icon.png',
-                perusahan: "INTAGRAM",
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              JobList(
-                text: "Back end Developer",
-                imageUrl: 'assets/facebook-icon.png',
-                perusahan: "FACEBOOK",
+              Container(
+                child: FutureBuilder<List<JobModel>>(
+                    future: jobProvider.getJobs(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Column(
+                          children: snapshot.hasData
+                              ? snapshot.data!
+                                  .map(
+                                    (jobs) => JobList(jobs),
+                                  )
+                                  .toList()
+                              : [
+                                  Text('No data available'),
+                                ],
+                          // [
+                          //   JobList(
+                          //     text: "Front End Developer",
+                          //     imageUrl: 'assets/instagram-icon.png',
+                          //     perusahan: "INTAGRAM",
+                          //   ),
+                          // ],
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
+                        ),
+                      );
+                    }),
               ),
             ],
           ),
@@ -230,15 +257,17 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          header(),
-          SizedBox(
-            height: 30,
-          ),
-          body()
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            header(),
+            SizedBox(
+              height: 30,
+            ),
+            body()
+          ],
+        ),
       ),
     );
   }

@@ -141,7 +141,7 @@ class _SigupPageState extends State<SigupPage> {
                 style: titleTextStyle,
               ),
               Text(
-                'Pengangguran Banyak Acara',
+                'Silahkan Register',
                 style: subTitleTextStyle,
               ),
               SizedBox(height: 40),
